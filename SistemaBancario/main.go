@@ -4,8 +4,12 @@ import (
 	"fmt"
 )
 
-var depositos []float64
-var saques []float64
+type Operacao struct {
+	Tipo  string
+	Valor float64
+}
+
+var operacoes []Operacao
 var saldo float64 = 0
 var numero_saques int = 0
 
@@ -17,7 +21,7 @@ func depositar() {
 	if valorDep <= 0 {
 		fmt.Println("Não permitido depósito de valor negativo")
 	} else {
-		depositos = append(depositos, valorDep)
+		operacoes = append(operacoes, Operacao{Tipo: "Depósito", Valor: valorDep})
 		saldo += valorDep
 		fmt.Printf("Deposito realizado no valor de R$ %.2f\n", valorDep)
 		fmt.Printf("Seu saldo é R$ %.2f\n", saldo)
@@ -42,7 +46,7 @@ func sacar() {
 			return
 		}
 		saldo -= valorSaq
-		saques = append(saques, valorSaq)
+		operacoes = append(operacoes, Operacao{Tipo: "Saque", Valor: valorSaq})
 		numero_saques++
 		fmt.Printf("Saque realizado no valor de R$ %.2f\n", valorSaq)
 		fmt.Printf("Seu saldo é R$ %.2f\n", saldo)
@@ -52,13 +56,13 @@ func sacar() {
 
 func extrato() {
 	fmt.Println("EXTRATO")
-
-	for _, dep := range depositos {
-		fmt.Printf("Depósito no valor de %.2f\n", dep)
-	}
-
-	for _, saq := range saques {
-		fmt.Printf("Saque no valor de %.2f\n", saq)
+	for i, op := range operacoes {
+		fmt.Printf("%d - ", i+1)
+		if op.Tipo == "Depósito" {
+			fmt.Printf("Depósito no valor de R$ %.2f\n", op.Valor)
+		} else if op.Tipo == "Saque" {
+			fmt.Printf("Saque no valor de R$ %.2f\n", op.Valor)
+		}
 	}
 	fmt.Printf("\nSaldo final R$ %v\n", saldo)
 }
